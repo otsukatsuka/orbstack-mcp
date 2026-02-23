@@ -109,7 +109,9 @@ func registerComposeUpDown(server *mcp.Server, exec docker.Executor) {
 				IsError: true,
 			}, nil, nil
 		}
-		return nil, result, nil
+		return &mcp.CallToolResult{
+			Content: []mcp.Content{&mcp.TextContent{Text: result}},
+		}, nil, nil
 	})
 
 	mcp.AddTool(server, &mcp.Tool{
@@ -123,6 +125,8 @@ func registerComposeUpDown(server *mcp.Server, exec docker.Executor) {
 				IsError: true,
 			}, nil, nil
 		}
-		return nil, result, nil
+		return &mcp.CallToolResult{
+			Content: []mcp.Content{&mcp.TextContent{Text: result}},
+		}, nil, nil
 	})
 }

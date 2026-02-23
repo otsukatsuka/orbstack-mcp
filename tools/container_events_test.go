@@ -15,7 +15,7 @@ func TestHandleContainerEvents_Basic(t *testing.T) {
 	eventsOutput := `{"status":"start","Action":"start","Type":"container","Actor":{"ID":"abc123def456","Attributes":{"name":"myapp","image":"nginx:latest"}},"time":1700000000}
 {"status":"die","Action":"die","Type":"container","Actor":{"ID":"abc123def456","Attributes":{"name":"myapp","image":"nginx:latest","exitCode":"0"}},"time":1700003600}`
 
-	mock.On("events --filter type=container --since 1h --until now --format {{json .}}", eventsOutput, nil)
+	mock.On("events --filter type=container --since 1h --until 0s --format {{json .}}", eventsOutput, nil)
 
 	args := containerEventsArgs{}
 
@@ -43,7 +43,7 @@ func TestHandleContainerEvents_FilterByContainer(t *testing.T) {
 
 	eventsOutput := `{"status":"start","Action":"start","Type":"container","Actor":{"ID":"abc123","Attributes":{"name":"webapp"}},"time":1700000000}`
 
-	mock.On("events --filter type=container --filter container=webapp --since 1h --until now --format {{json .}}", eventsOutput, nil)
+	mock.On("events --filter type=container --filter container=webapp --since 1h --until 0s --format {{json .}}", eventsOutput, nil)
 
 	args := containerEventsArgs{
 		Container: "webapp",
@@ -67,7 +67,7 @@ func TestHandleContainerEvents_FilterByEventType(t *testing.T) {
 
 	eventsOutput := `{"status":"oom","Action":"oom","Type":"container","Actor":{"ID":"abc123","Attributes":{"name":"memhog"}},"time":1700000000}`
 
-	mock.On("events --filter type=container --filter event=oom --since 24h --until now --format {{json .}}", eventsOutput, nil)
+	mock.On("events --filter type=container --filter event=oom --since 24h --until 0s --format {{json .}}", eventsOutput, nil)
 
 	args := containerEventsArgs{
 		EventType: "oom",
@@ -90,7 +90,7 @@ func TestHandleContainerEvents_FilterByEventType(t *testing.T) {
 func TestHandleContainerEvents_NoEvents(t *testing.T) {
 	mock := docker.NewMock()
 
-	mock.On("events --filter type=container --since 1h --until now --format {{json .}}", "", nil)
+	mock.On("events --filter type=container --since 1h --until 0s --format {{json .}}", "", nil)
 
 	args := containerEventsArgs{}
 
@@ -107,7 +107,7 @@ func TestHandleContainerEvents_NoEvents(t *testing.T) {
 func TestHandleContainerEvents_DockerError(t *testing.T) {
 	mock := docker.NewMock()
 
-	mock.On("events --filter type=container --since 1h --until now --format {{json .}}", "", fmt.Errorf("daemon connection refused"))
+	mock.On("events --filter type=container --since 1h --until 0s --format {{json .}}", "", fmt.Errorf("daemon connection refused"))
 
 	args := containerEventsArgs{}
 

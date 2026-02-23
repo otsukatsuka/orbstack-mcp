@@ -13,7 +13,7 @@ import (
 type containerEventsArgs struct {
 	Container string `json:"container,omitempty" jsonschema:"filter events by container name or ID"`
 	Since     string `json:"since,omitempty" jsonschema:"show events since this time (default: 1h)"`
-	Until     string `json:"until,omitempty" jsonschema:"show events until this time (default: now)"`
+	Until     string `json:"until,omitempty" jsonschema:"show events until this time (default: 0s)"`
 	EventType string `json:"event_type,omitempty" jsonschema:"filter by event type: start stop die restart oom kill pause unpause etc."`
 }
 
@@ -39,7 +39,7 @@ func handleContainerEvents(ctx context.Context, exec docker.Executor, args conta
 	}
 	until := args.Until
 	if until == "" {
-		until = "now"
+		until = "0s"
 	}
 
 	cmdArgs := []string{"events", "--filter", "type=container"}
@@ -130,6 +130,8 @@ func registerContainerEvents(server *mcp.Server, exec docker.Executor) {
 				IsError: true,
 			}, nil, nil
 		}
-		return nil, result, nil
+		return &mcp.CallToolResult{
+			Content: []mcp.Content{&mcp.TextContent{Text: result}},
+		}, nil, nil
 	})
 }

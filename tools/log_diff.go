@@ -139,6 +139,8 @@ func registerLogDiff(server *mcp.Server, exec docker.Executor) {
 				IsError: true,
 			}, nil, nil
 		}
-		return nil, result, nil
+		return &mcp.CallToolResult{
+			Content: []mcp.Content{&mcp.TextContent{Text: result}},
+		}, nil, nil
 	})
 }
