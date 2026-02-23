@@ -42,13 +42,13 @@ func handleContainerHealth(ctx context.Context, exec docker.Executor, args conta
 	// Get health state
 	healthOut, err := exec.Exec(ctx, "inspect", "--format", "{{json .State.Health}}", args.Container)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to get health state for container %q: %w", args.Container, err)
 	}
 
 	// Get health config
 	configOut, err := exec.Exec(ctx, "inspect", "--format", "{{json .Config.Healthcheck}}", args.Container)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to get health config for container %q: %w", args.Container, err)
 	}
 
 	healthOut = strings.TrimSpace(healthOut)

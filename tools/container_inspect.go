@@ -27,7 +27,7 @@ func handleContainerInspect(ctx context.Context, exec docker.Executor, args cont
 
 	out, err := exec.Exec(ctx, "inspect", args.Container)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to inspect container %q: %w", args.Container, err)
 	}
 
 	// docker inspect returns a JSON array

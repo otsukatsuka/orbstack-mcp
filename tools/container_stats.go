@@ -34,7 +34,7 @@ func handleContainerStats(ctx context.Context, exec docker.Executor, args contai
 
 	out, err := exec.Exec(ctx, cmdArgs...)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to get container stats: %w", err)
 	}
 
 	out = strings.TrimSpace(out)

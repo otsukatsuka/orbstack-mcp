@@ -9,6 +9,10 @@ import (
 	"github.com/otsukatsuka/orbstack-mcp/docker"
 )
 
+func boolPtr(b bool) *bool {
+	return &b
+}
+
 func TestHandleListContainers_MixedComposeAndStandalone(t *testing.T) {
 	mock := docker.NewMock()
 
@@ -21,7 +25,7 @@ func TestHandleListContainers_MixedComposeAndStandalone(t *testing.T) {
 
 	mock.On("ps -a --format {{json .}}", lines, nil)
 
-	result, err := handleListContainers(context.Background(), mock, listContainersArgs{All: true})
+	result, err := handleListContainers(context.Background(), mock, listContainersArgs{All: boolPtr(true)})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -62,7 +66,7 @@ func TestHandleListContainers_FilterByProject(t *testing.T) {
 
 	mock.On("ps -a --format {{json .}}", lines, nil)
 
-	result, err := handleListContainers(context.Background(), mock, listContainersArgs{All: true, Project: "webapp"})
+	result, err := handleListContainers(context.Background(), mock, listContainersArgs{All: boolPtr(true), Project: "webapp"})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -85,7 +89,7 @@ func TestHandleListContainers_EmptyResult(t *testing.T) {
 	mock := docker.NewMock()
 	mock.On("ps -a --format {{json .}}", "", nil)
 
-	result, err := handleListContainers(context.Background(), mock, listContainersArgs{All: true})
+	result, err := handleListContainers(context.Background(), mock, listContainersArgs{All: boolPtr(true)})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -99,7 +103,7 @@ func TestHandleListContainers_DockerError(t *testing.T) {
 	mock := docker.NewMock()
 	mock.On("ps -a --format {{json .}}", "", fmt.Errorf("Cannot connect to the Docker daemon"))
 
-	_, err := handleListContainers(context.Background(), mock, listContainersArgs{All: true})
+	_, err := handleListContainers(context.Background(), mock, listContainersArgs{All: boolPtr(true)})
 	if err == nil {
 		t.Fatal("expected error, got nil")
 	}
@@ -115,7 +119,7 @@ func TestHandleListContainers_NotAllFlag(t *testing.T) {
 	line := `{"ID":"abc123","Names":"running-container","Image":"nginx","State":"running","Status":"Up 1 hour","Ports":"","Labels":"","CreatedAt":"","Networks":""}`
 	mock.On("ps --format {{json .}}", line, nil)
 
-	result, err := handleListContainers(context.Background(), mock, listContainersArgs{All: false})
+	result, err := handleListContainers(context.Background(), mock, listContainersArgs{All: boolPtr(false)})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -142,12 +146,45 @@ func TestHandleListContainers_FilterByProjectNoMatch(t *testing.T) {
 	line := `{"ID":"abc123","Names":"webapp-web-1","Image":"nginx","State":"running","Status":"Up","Ports":"","Labels":"com.docker.compose.project=webapp","CreatedAt":"","Networks":""}`
 	mock.On("ps -a --format {{json .}}", line, nil)
 
-	result, err := handleListContainers(context.Background(), mock, listContainersArgs{All: true, Project: "nonexistent"})
+	result, err := handleListContainers(context.Background(), mock, listContainersArgs{All: boolPtr(true), Project: "nonexistent"})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	if !strings.Contains(result, "No containers found for project") {
 		t.Errorf("expected no containers message for project filter, got %q", result)
+	}
+}
+
+func TestHandleListContainers_DefaultAllTrue(t *testing.T) {
+	mock := docker.NewMock()
+
+	line := `{"ID":"abc123","Names":"test-container","Image":"nginx","State":"running","Status":"Up 1 hour","Ports":"","Labels":"","CreatedAt":"","Networks":""}`
+	// When All is nil (not provided), the handler should default to true and pass -a flag
+	mock.On("ps -a --format {{json .}}", line, nil)
+
+	result, err := handleListContainers(context.Background(), mock, listContainersArgs{})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if !strings.Contains(result, "test-container") {
+		t.Error("expected test-container in result")
+	}
+
+	// Verify the -a flag was included (default behavior)
+	calls := mock.Calls()
+	if len(calls) != 1 {
+		t.Fatalf("expected 1 call, got %d", len(calls))
+	}
+	found := false
+	for _, arg := range calls[0] {
+		if arg == "-a" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Error("expected -a flag when All is nil (default true)")
 	}
 }

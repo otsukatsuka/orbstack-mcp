@@ -12,7 +12,7 @@ import (
 )
 
 type listContainersArgs struct {
-	All     bool   `json:"all,omitempty" jsonschema:"show stopped containers too (default: true)"`
+	All     *bool  `json:"all,omitempty" jsonschema:"show stopped containers too (default: true)"`
 	Project string `json:"project,omitempty" jsonschema:"filter by Compose project name"`
 }
 
@@ -41,8 +41,10 @@ func (c *containerInfo) composeProject() string {
 }
 
 func handleListContainers(ctx context.Context, exec docker.Executor, args listContainersArgs) (string, error) {
+	// Default to showing all containers (including stopped) when not explicitly set.
+	showAll := args.All == nil || *args.All
 	cmdArgs := []string{"ps"}
-	if args.All {
+	if showAll {
 		cmdArgs = append(cmdArgs, "-a")
 	}
 	cmdArgs = append(cmdArgs, "--format", "{{json .}}")
@@ -124,11 +126,7 @@ func registerListContainers(server *mcp.Server, exec docker.Executor) {
 		Name:        "list_containers",
 		Description: "List Docker containers, grouped by Compose project. Shows container name, image, state, and status.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, args listContainersArgs) (*mcp.CallToolResult, any, error) {
-		// Default all=true when not explicitly set (zero value for bool is false)
-		// We handle this by always passing -a flag when All is true or when the
-		// struct is at its zero value (user didn't specify). Since the jsonschema
-		// default is true, the MCP client should send true by default.
-		// However, to be safe, if the user sends no args at all, we treat it as all=true.
+			// All defaults to true when nil (not provided by client).
 		result, err := handleListContainers(ctx, exec, args)
 		if err != nil {
 			return &mcp.CallToolResult{
