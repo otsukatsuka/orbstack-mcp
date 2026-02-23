@@ -12,8 +12,8 @@ import (
 )
 
 type listContainersArgs struct {
-	All     bool   `json:"all,omitempty" jsonschema:"description=show stopped containers too,default=true"`
-	Project string `json:"project,omitempty" jsonschema:"description=filter by Compose project name"`
+	All     bool   `json:"all,omitempty" jsonschema:"show stopped containers too (default: true)"`
+	Project string `json:"project,omitempty" jsonschema:"filter by Compose project name"`
 }
 
 // containerInfo represents a single container from docker ps JSON output.

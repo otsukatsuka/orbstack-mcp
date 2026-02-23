@@ -11,10 +11,10 @@ import (
 )
 
 type containerEventsArgs struct {
-	Container string `json:"container,omitempty" jsonschema:"description=filter events by container name or ID"`
-	Since     string `json:"since,omitempty" jsonschema:"description=show events since this time (default: 1h),default=1h"`
-	Until     string `json:"until,omitempty" jsonschema:"description=show events until this time (default: now),default=now"`
-	EventType string `json:"event_type,omitempty" jsonschema:"description=filter by event type: start stop die restart oom kill pause unpause etc."`
+	Container string `json:"container,omitempty" jsonschema:"filter events by container name or ID"`
+	Since     string `json:"since,omitempty" jsonschema:"show events since this time (default: 1h)"`
+	Until     string `json:"until,omitempty" jsonschema:"show events until this time (default: now)"`
+	EventType string `json:"event_type,omitempty" jsonschema:"filter by event type: start stop die restart oom kill pause unpause etc."`
 }
 
 // dockerEvent represents the JSON output of docker events.

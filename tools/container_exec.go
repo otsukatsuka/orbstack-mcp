@@ -9,10 +9,10 @@ import (
 )
 
 type containerExecArgs struct {
-	Container string `json:"container" jsonschema:"description=Container name or ID"`
-	Command   string `json:"command" jsonschema:"description=Command to execute inside the container (supports pipes and redirects via sh -c)"`
-	User      string `json:"user,omitempty" jsonschema:"description=Run command as a specific user"`
-	Workdir   string `json:"workdir,omitempty" jsonschema:"description=Working directory inside the container"`
+	Container string `json:"container" jsonschema:"container name or ID"`
+	Command   string `json:"command" jsonschema:"command to execute inside the container (supports pipes and redirects via sh -c)"`
+	User      string `json:"user,omitempty" jsonschema:"run command as a specific user"`
+	Workdir   string `json:"workdir,omitempty" jsonschema:"working directory inside the container"`
 }
 
 func handleContainerExec(ctx context.Context, exec docker.Executor, args containerExecArgs) (string, error) {

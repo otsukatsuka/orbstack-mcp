@@ -11,11 +11,11 @@ import (
 )
 
 type logDiffArgs struct {
-	Container    string `json:"container" jsonschema:"description=container name or ID"`
-	Period1Start string `json:"period1_start" jsonschema:"description=start of period 1 (RFC3339 or relative e.g. 2h)"`
-	Period1End   string `json:"period1_end" jsonschema:"description=end of period 1 (RFC3339 or relative e.g. 1h)"`
-	Period2Start string `json:"period2_start" jsonschema:"description=start of period 2 (RFC3339 or relative e.g. 1h)"`
-	Period2End   string `json:"period2_end" jsonschema:"description=end of period 2 (RFC3339 or relative e.g. now)"`
+	Container    string `json:"container" jsonschema:"container name or ID"`
+	Period1Start string `json:"period1_start" jsonschema:"start of period 1 (RFC3339 or relative e.g. 2h)"`
+	Period1End   string `json:"period1_end" jsonschema:"end of period 1 (RFC3339 or relative e.g. 1h)"`
+	Period2Start string `json:"period2_start" jsonschema:"start of period 2 (RFC3339 or relative e.g. 1h)"`
+	Period2End   string `json:"period2_end" jsonschema:"end of period 2 (RFC3339 or relative e.g. now)"`
 }
 
 func fetchLogs(ctx context.Context, exec docker.Executor, container, since, until string) (string, error) {

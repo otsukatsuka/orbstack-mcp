@@ -11,7 +11,7 @@ import (
 )
 
 type containerStatsArgs struct {
-	Container string `json:"container" jsonschema:"description=container name or ID (if empty returns all containers)"`
+	Container string `json:"container" jsonschema:"container name or ID (if empty returns all containers)"`
 }
 
 type statsEntry struct {

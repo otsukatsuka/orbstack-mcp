@@ -12,12 +12,12 @@ import (
 )
 
 type searchLogsArgs struct {
-	Container    string `json:"container" jsonschema:"description=container name or ID,required"`
-	Pattern      string `json:"pattern" jsonschema:"description=regex pattern to search for in logs,required"`
-	Tail         int    `json:"tail,omitempty" jsonschema:"description=number of log lines to fetch before filtering,default=1000"`
-	Since        string `json:"since,omitempty" jsonschema:"description=show logs since timestamp (e.g. 2024-01-01T00:00:00) or relative (e.g. 1h)"`
-	Timestamps   bool   `json:"timestamps,omitempty" jsonschema:"description=show timestamps in log output"`
-	ContextLines int    `json:"context_lines,omitempty" jsonschema:"description=number of lines of context around each match (like grep -C),default=0"`
+	Container    string `json:"container" jsonschema:"container name or ID"`
+	Pattern      string `json:"pattern" jsonschema:"regex pattern to search for in logs"`
+	Tail         int    `json:"tail,omitempty" jsonschema:"number of log lines to fetch before filtering (default: 1000)"`
+	Since        string `json:"since,omitempty" jsonschema:"show logs since timestamp (e.g. 2024-01-01T00:00:00) or relative (e.g. 1h)"`
+	Timestamps   bool   `json:"timestamps,omitempty" jsonschema:"show timestamps in log output"`
+	ContextLines int    `json:"context_lines,omitempty" jsonschema:"number of lines of context around each match (like grep -C) (default: 0)"`
 }
 
 func handleSearchLogs(ctx context.Context, exec docker.Executor, args searchLogsArgs) (string, error) {

@@ -10,11 +10,11 @@ import (
 )
 
 type getLogsArgs struct {
-	Container  string `json:"container" jsonschema:"description=container name or ID,required"`
-	Tail       int    `json:"tail,omitempty" jsonschema:"description=number of lines to show from the end of the logs,default=100"`
-	Since      string `json:"since,omitempty" jsonschema:"description=show logs since timestamp (e.g. 2024-01-01T00:00:00) or relative (e.g. 1h)"`
-	Until      string `json:"until,omitempty" jsonschema:"description=show logs until timestamp (e.g. 2024-01-01T00:00:00) or relative (e.g. 1h)"`
-	Timestamps bool   `json:"timestamps,omitempty" jsonschema:"description=show timestamps in log output"`
+	Container  string `json:"container" jsonschema:"container name or ID"`
+	Tail       int    `json:"tail,omitempty" jsonschema:"number of lines to show from the end of the logs (default: 100)"`
+	Since      string `json:"since,omitempty" jsonschema:"show logs since timestamp (e.g. 2024-01-01T00:00:00) or relative (e.g. 1h)"`
+	Until      string `json:"until,omitempty" jsonschema:"show logs until timestamp (e.g. 2024-01-01T00:00:00) or relative (e.g. 1h)"`
+	Timestamps bool   `json:"timestamps,omitempty" jsonschema:"show timestamps in log output"`
 }
 
 func handleGetLogs(ctx context.Context, exec docker.Executor, args getLogsArgs) (string, error) {

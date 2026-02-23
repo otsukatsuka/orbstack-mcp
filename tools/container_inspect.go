@@ -11,8 +11,8 @@ import (
 )
 
 type containerInspectArgs struct {
-	Container string `json:"container" jsonschema:"required,description=container name or ID to inspect"`
-	Section   string `json:"section" jsonschema:"description=section to display: env ports volumes network all (default: all)"`
+	Container string `json:"container" jsonschema:"container name or ID to inspect"`
+	Section   string `json:"section" jsonschema:"section to display: env ports volumes network all (default: all)"`
 }
 
 func handleContainerInspect(ctx context.Context, exec docker.Executor, args containerInspectArgs) (string, error) {

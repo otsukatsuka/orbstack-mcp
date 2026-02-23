@@ -9,8 +9,8 @@ import (
 )
 
 type restartServiceArgs struct {
-	Container string `json:"container" jsonschema:"description=Container name or ID to restart"`
-	Timeout   int    `json:"timeout,omitempty" jsonschema:"description=Seconds to wait before killing the container (default 10)"`
+	Container string `json:"container" jsonschema:"container name or ID to restart"`
+	Timeout   int    `json:"timeout,omitempty" jsonschema:"seconds to wait before killing the container (default: 10)"`
 }
 
 func handleRestartService(ctx context.Context, exec docker.Executor, args restartServiceArgs) (string, error) {

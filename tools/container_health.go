@@ -11,7 +11,7 @@ import (
 )
 
 type containerHealthArgs struct {
-	Container string `json:"container" jsonschema:"required,description=container name or ID to check health for"`
+	Container string `json:"container" jsonschema:"container name or ID to check health for"`
 }
 
 type healthLog struct {

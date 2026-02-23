@@ -11,13 +11,13 @@ import (
 )
 
 type composeUpArgs struct {
-	Project  string   `json:"project" jsonschema:"description=Compose project name"`
-	Services []string `json:"services,omitempty" jsonschema:"description=specific services to start (default: all)"`
+	Project  string   `json:"project" jsonschema:"Compose project name"`
+	Services []string `json:"services,omitempty" jsonschema:"specific services to start (default: all)"`
 }
 
 type composeDownArgs struct {
-	Project       string `json:"project" jsonschema:"description=Compose project name"`
-	RemoveVolumes bool   `json:"remove_volumes,omitempty" jsonschema:"description=remove named volumes declared in the volumes section,default=false"`
+	Project       string `json:"project" jsonschema:"Compose project name"`
+	RemoveVolumes bool   `json:"remove_volumes,omitempty" jsonschema:"remove named volumes declared in the volumes section (default: false)"`
 }
 
 // composeProjectContainer holds the minimal fields we need from docker ps JSON output

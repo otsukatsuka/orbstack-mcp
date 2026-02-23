@@ -11,10 +11,10 @@ import (
 )
 
 type composeLogsArgs struct {
-	Project    string `json:"project" jsonschema:"description=Compose project name"`
-	Tail       int    `json:"tail,omitempty" jsonschema:"description=Number of lines to show from the end of the logs (default 100)"`
-	Since      string `json:"since,omitempty" jsonschema:"description=Show logs since timestamp (e.g. 2021-01-01T00:00:00Z) or relative (e.g. 42m for 42 minutes)"`
-	Timestamps bool   `json:"timestamps,omitempty" jsonschema:"description=Show timestamps in log output"`
+	Project    string `json:"project" jsonschema:"Compose project name"`
+	Tail       int    `json:"tail,omitempty" jsonschema:"number of lines to show from the end of the logs (default: 100)"`
+	Since      string `json:"since,omitempty" jsonschema:"show logs since timestamp (e.g. 2021-01-01T00:00:00Z) or relative (e.g. 42m for 42 minutes)"`
+	Timestamps bool   `json:"timestamps,omitempty" jsonschema:"show timestamps in log output"`
 }
 
 type composeLogContainer struct {
